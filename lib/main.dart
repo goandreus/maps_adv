@@ -1,3 +1,4 @@
+import 'package:UI/pages/splash.dart';
 import 'package:flutter/services.dart';
 
 import 'pages/home.dart';
@@ -18,8 +19,11 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: SplashPage(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        'home' : (_) => HomePage(),
+      },
     );
   }
 }
