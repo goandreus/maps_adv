@@ -225,6 +225,9 @@ class _HomePageState extends State<HomePage> {
                initialCameraPosition: _kGooglePlex,
                myLocationButtonEnabled: true,
                myLocationEnabled: true,
+               onTap: (LatLng p){
+                 print('p: ${p.latitude},${p.longitude}');
+               },
                onMapCreated: (GoogleMapController controller){
                  controller.setMapStyle(jsonEncode(mapStyle));
                },
