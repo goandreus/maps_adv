@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
- 
 
 const mapStyle = [
   {
@@ -182,6 +183,36 @@ class _HomePageState extends State<HomePage> {
     zoom: 14.4746,
   );
 
+  StreamSubscription<Position> _positionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTracking();
+  }
+
+  _startTracking(){
+    final geolocator = Geolocator();
+    final locationOptions = LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 5);
+
+     _positionStream = geolocator.getPositionStream(locationOptions).listen(_onLocationUpdate);
+  }
+
+  _onLocationUpdate(Position position){
+    if(position != null){
+      print('position ${position.latitude}, ${position.longitude}');
+    }
+  }
+
+  @override
+  void dispose() {
+    if(_positionStream != null){
+      _positionStream.cancel();
+      _positionStream = null;
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,7 +223,8 @@ class _HomePageState extends State<HomePage> {
            children: <Widget>[
              GoogleMap(
                initialCameraPosition: _kGooglePlex,
-               myLocationButtonEnabled: false,
+               myLocationButtonEnabled: true,
+               myLocationEnabled: true,
                onMapCreated: (GoogleMapController controller){
                  controller.setMapStyle(jsonEncode(mapStyle));
                },
