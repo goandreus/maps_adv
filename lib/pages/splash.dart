@@ -8,15 +8,31 @@ class SplashPage extends StatefulWidget {
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver{
 
   PermissionHandler _permissionHandler = PermissionHandler();
 
   var _isChecking = true;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _check();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state = $state');
+    if(state == AppLifecycleState.resumed){
+      _check();
+    }
   }
 
   _check() async {
@@ -35,8 +51,12 @@ class _SplashPageState extends State<SplashPage> {
   _request () async {
    final result = await _permissionHandler.requestPermissions([PermissionGroup.locationWhenInUse]);
    if(result.containsKey(PermissionGroup.locationWhenInUse)){
-     if(result[PermissionGroup.locationWhenInUse]==PermissionStatus.granted){
+     final status = result[PermissionGroup.locationWhenInUse];
+     if(status == PermissionStatus.granted){
        Navigator.pushNamed(context, 'home');
+     }else if(status == PermissionStatus.denied){
+      final result = _permissionHandler.openAppSettings();
+      print('result $result');
      }
    }
   }
