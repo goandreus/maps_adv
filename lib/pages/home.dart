@@ -214,9 +214,20 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  _updateMarkerPosition(MarkerId markerId,LatLng p){
+    print('New position ');
+    _markes[markerId] = _markes[markerId].copyWith(positionParam: p);
+  }
+
   _onTap(LatLng p){
-    final markerId = MarkerId("${_markes.length}");
-    final marker = Marker(markerId:markerId, position: p);
+    final id = "${_markes.length}";
+    final markerId = MarkerId(id);
+    final infoWindow = InfoWindow(title: 'Marker $id', snippet: "${p.latitude},${p.longitude}",anchor: Offset(0.5,0.0),
+    onTap: (){
+      print('clicked $id');
+    },
+    );
+    final marker = Marker(markerId:markerId, position: p, draggable: true, onDragEnd:(np) => _updateMarkerPosition(markerId,np));
     setState(() {
       _markes[markerId] = marker;
     });
