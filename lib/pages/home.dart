@@ -184,6 +184,7 @@ class _HomePageState extends State<HomePage> {
   );
 
   StreamSubscription<Position> _positionStream;
+  Map<MarkerId,Marker> _markes = Map();
 
   @override
   void initState() {
@@ -213,6 +214,14 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  _onTap(LatLng p){
+    final markerId = MarkerId("${_markes.length}");
+    final marker = Marker(markerId:markerId, position: p);
+    setState(() {
+      _markes[markerId] = marker;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,9 +234,8 @@ class _HomePageState extends State<HomePage> {
                initialCameraPosition: _kGooglePlex,
                myLocationButtonEnabled: true,
                myLocationEnabled: true,
-               onTap: (LatLng p){
-                 print('p: ${p.latitude},${p.longitude}');
-               },
+               onTap: _onTap,
+               markers: Set.of(_markes.values),
                onMapCreated: (GoogleMapController controller){
                  controller.setMapStyle(jsonEncode(mapStyle));
                },
