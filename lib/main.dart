@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Demo maps',
       theme: ThemeData(
 
         primarySwatch: Colors.blue,
